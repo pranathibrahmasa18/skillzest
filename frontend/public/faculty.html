@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #0277bd;
+            --secondary-color: #1a2942;
+            --light-color: #f5f5f5;
+            --accent-color: #ff5722;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .welcome-message {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        #user_name {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+
+        .notification-btn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.4rem;
+            padding: 10px;
+            border-radius: 50%;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+        
+        .notification-btn:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.8rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #777;
+            font-size: 1rem;
+        }
+        
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .action-btn {
+            background-color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+        
+        .action-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+        
+        .action-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .close-modal:hover {
+            color: var(--danger-color);
+        }
+        
+        .modal-title {
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .notification-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-message {
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .welcome-message {
+                font-size: 1.5rem;
+            }
+            
+            .buttons-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with welcome message and notifications -->
+        <div class="header">
+            <h1 class="welcome-message">Welcome</h1>
+
+            <button class="notification-btn" id="notificationBtn">
+                🔔
+                <span class="notification-badge">5</span>
+            </button>
+        </div>
+        
+        <!-- Statistics Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">👨‍🏫</div>
+                <div class="stat-value" id="facultyCount">0</div>
+                <div class="stat-label">Faculty Members</div>
+
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">👨‍🎓</div>
+                <div class="stat-value" id="studentCount">0</div>
+                <div class="stat-label">Students</div>
+
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-value">1,250</div>
+                <div class="stat-label">Active Courses</div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="buttons-container">
+            <button class="action-btn" id="userManagementBtn">
+                <div class="action-icon">👥</div>
+                <div class="action-label">User Management</div>
+            </button>
+            
+            <button class="action-btn" id="courseManagementBtn">
+                <div class="action-icon">📚</div>
+                <div class="action-label">Course Management</div>
+            </button>
+            
+            <button class="action-btn" id="reportGenerationBtn">
+                <div class="action-icon">📊</div>
+                <div class="action-label">Report Generation</div>
+            </button>
+            
+            <button class="action-btn" id="systemMonitoringBtn">
+                <div class="action-icon">⚙</div>
+                <div class="action-label">System Monitoring</div>
+            </button>
+            
+            <button class="action-btn" id="announcementsBtn">
+                <div class="action-icon">📢</div>
+                <div class="action-label">Announcements</div>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Notifications Modal -->
+    <div class="modal" id="notificationsModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <h2 class="modal-title">Notifications</h2>
+            
+            <div class="notification-item">
+                <div class="notification-icon">📚</div>
+                <div class="notification-content">
+                    <div class="notification-message">New course "Advanced Machine Learning" added</div>
+                    <div class="notification-time">5 minutes ago</div>
+                </div>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-icon">👨‍🏫</div>
+                <div class="notification-content">
+                    <div class="notification-message">New faculty Dr. Sharma registered</div>
+                    <div class="notification-time">1 hour ago</div>
+                </div>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-icon">⚠</div>
+                <div class="notification-content">
+                    <div class="notification-message">System maintenance scheduled for tomorrow</div>
+                    <div class="notification-time">3 hours ago</div>
+                </div>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-icon">🎫</div>
+                <div class="notification-content">
+                    <div class="notification-message">Support ticket #2854 requires attention</div>
+                    <div class="notification-time">5 hours ago</div>
+                </div>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-icon">📊</div>
+                <div class="notification-content">
+                    <div class="notification-message">Monthly activity report generated</div>
+                    <div class="notification-time">Yesterday</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        
+        courseManagementBtn.addEventListener('click', function() {
+            window.location.href = "selectedcourse.html";
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationsModal = document.getElementById('notificationsModal');
+            const closeModal = document.getElementById('closeModal');
+            
+            // Action buttons
+            const userManagementBtn = document.getElementById('userManagementBtn');
+            const courseManagementBtn = document.getElementById('courseManagementBtn');
+            const reportGenerationBtn = document.getElementById('reportGenerationBtn');
+            const systemMonitoringBtn = document.getElementById('systemMonitoringBtn');
+            const announcementsBtn = document.getElementById('announcementsBtn');
+            
+            // Show notifications modal
+            notificationBtn.addEventListener('click', function() {
+                notificationsModal.style.display = 'flex';
+            });
+            
+            // Close modal when clicking the X
+            closeModal.addEventListener('click', function() {
+                notificationsModal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === notificationsModal) {
+                    notificationsModal.style.display = 'none';
+                }
+            });
+            
+            // Add functionality to action buttons
+            userManagementBtn.addEventListener('click', function() {
+                alert('User Management interface would open here');
+            });
+            
+            courseManagementBtn.addEventListener('click', function() {
+                alert('Course Management interface would open here');
+            });
+            
+            reportGenerationBtn.addEventListener('click', function() {
+                alert('Report Generation interface would open here');
+            });
+            
+            systemMonitoringBtn.addEventListener('click', function() {
+                alert('System Monitoring interface would open here');
+            });
+            
+            announcementsBtn.addEventListener('click', function() {
+                alert('Announcements interface would open here');
+            });
+        });
+        fetch('/api/dashboard')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('adminName').textContent = data.adminName;
+    document.getElementById('facultyCount').textContent = data.facultyCount;
+    document.getElementById('studentCount').textContent = data.studentCount;
+  });
+
+    </script>
+</body>
+</html>

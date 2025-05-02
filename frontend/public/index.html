@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillZest - E-Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <img src="logo.jpg" alt="SkillZest Logo" class="logo">
+                <div class="logo-text">SKILLZEST</div>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="#">About Us</a>
+                <a href="#">Courses</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Help</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Welcome to SkillZest</h1>
+            <p>Empowering education through technology and expertise from India's top technical minds</p>
+            
+            <div class="hero-buttons">
+                <a href="#" class="hero-btn primary">Get Started</a>
+                <a href="#" class="hero-btn secondary">Explore Courses</a>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">27,358</div>
+                    <div class="stat-label">Students Enrolled</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">453</div>
+                    <div class="stat-label">Expert Faculty</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">1,250+</div>
+                    <div class="stat-label">Courses Available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+        <section class="login-section">
+            <h2>Log in to Your Account</h2>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="user-type">I am a:</label>
+                    <select id="user-type" required>
+                        <option value="" selected disabled>Select your role ^</option>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+            
+                <div class="form-group">
+                    <label for="username">Email/Username:</label>
+                    <input type="text" id="username" required>
+                </div>
+            
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+            
+                <button type="submit" class="login-btn">Log In</button>
+            
+                <div class="account-options">
+                    <a href="#">Forgot password?</a>
+                    <a href="#">Need help?</a>
+                </div>
+                <div class="or-divider">
+                    <span>OR</span>
+                </div>
+                
+                <button type="button" class="signup-btn" style="width: 100%;" onclick="window.open('signup.html', '_blank')">Create New Account</button>
+            </form>
+            
+        </section>
+        
+        <section class="features">
+            <h2 class="section-title">Bonus Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">AI-based Course Recommendations</h3>
+                    <p class="feature-desc">Get personalized course suggestions based on your interests and past enrollments to enhance your learning journey.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3 class="feature-title">Gamification & Leaderboard</h3>
+                    <p class="feature-desc">Earn achievement badges and climb the rankings to encourage participation and friendly competition.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Offline Access</h3>
+                    <p class="feature-desc">Download course materials for offline study, allowing you to learn anytime, anywhere, even without internet.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3 class="feature-title">Student-Faculty Chat</h3>
+                    <p class="feature-desc">Connect directly with your instructors for academic support, doubt clearing, and guidance.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">Plagiarism Detection</h3>
+                    <p class="feature-desc">Integrated tools to ensure academic integrity by checking assignments for plagiarism.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Performance Analytics</h3>
+                    <p class="feature-desc">Get detailed insights into your academic progress with comprehensive performance dashboards.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">FAQ</a>
+                <a href="#">Support</a>
+            </div>
+            <div class="copyright">
+                © 2025 LEARN FROM IITIANS. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+        
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+        
+            try {
+                const response = await fetch("http://localhost:5000/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({username, password }),
+                });
+        
+                const data = await response.json();
+        
+                if (response.ok) {
+                    // ✅ Store login details in localStorage
+                    localStorage.setItem("username", data.username);
+                    localStorage.setItem("role", data.role);
+                    localStorage.setItem("token", data.token);
+        
+                    // ✅ Redirect based on role
+                    if (data.role === "student") window.location.href = "student.html";
+                    else if (data.role === "faculty") window.location.href = "faculty.html";
+                    else if (data.role === "admin") window.location.href = "admin.html";
+                    else alert("Unknown role!");
+                } else {
+                    alert(data.message || "Invalid credentials!");
+                }
+            } catch (error) {
+                console.error("Login error:", error);
+                alert("Error logging in. Please try again.");
+            }
+        });        
+        </script>                
+    <script src="/dist/bundle.js"></script>
+</body>
+</html>
